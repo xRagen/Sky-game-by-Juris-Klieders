@@ -9,9 +9,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private KeyCode leftInput, rightInput;
     [SerializeField] private Transform groupPoint;
     [SerializeField] private LayerMask groundLayer;
-
+    [SerializeField] private float knockBackForce = 300, knockUpForce = 400;
     private float speed = 0;
     private Animator animator;
+    private bool isHurt = false;
     
     void Start()
     {
@@ -19,10 +20,37 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    private void OnEnable()
+    {
+        GameEvents.TakeDamage += TakeDamage;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.TakeDamage -= TakeDamage;
+    }
+
+    private void TakeDamage()
+    {
+        rb.AddForce(-transform.forward * knockBackForce);
+        rb.AddForce(transform.up * knockUpForce);
+        Debug.Log("Player was hurt");
+        isHurt = true;
+        Invoke("Recover", 1.5f);
+    }
+
+    private void Recover()
+    {
+        isHurt = false;
+    }
+
     private void FixedUpdate()
     {
+        if (isHurt)
+            return;
         float angle = Mathf.Abs(transform.eulerAngles.y - 180);
-        acceleration = Remap(0, 90, maxAcceleration, minAcceleration, angle);
+        acceleration = Remap(0, 90, minAcceleration, maxAcceleration, angle);
+        //Debug.Log($"angle {angle} acceleration {acceleration}");
         speed += acceleration * Time.fixedDeltaTime;
         speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
         Vector3 velocity = speed * transform.forward * Time.fixedDeltaTime;
@@ -34,7 +62,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         bool isGraunded = Physics.Linecast(transform.position, groupPoint.position, groundLayer);
-        if (isGraunded) 
+        if (isGraunded && !isHurt) 
         {
             if (Input.GetKey(leftInput) && transform.eulerAngles.y < 269)
             {
@@ -50,6 +78,8 @@ public class PlayerController : MonoBehaviour
         
 
     }
+
+    
 
     // remaps a number from a given range into a new range
     private float Remap(float oldMin, float oldMax, float newMin, float newMax, float oldValue)
