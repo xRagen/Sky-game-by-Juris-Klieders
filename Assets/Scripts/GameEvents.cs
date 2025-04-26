@@ -8,6 +8,7 @@ public class GameEvents : MonoBehaviour
     public static event GameEvent TakeDamage;
     public static event GameEvent RaceStart;
     public static event GameEvent RaceFinish;
+    public static event GameEvent PenaltyFlag;
 
     public static void CallTakeDamage()
     {
@@ -25,6 +26,12 @@ public class GameEvents : MonoBehaviour
     {
         if (RaceFinish != null)
            RaceFinish();
+    }
+
+    public static void CallRacePenaltyFlag()
+    {
+        if(PenaltyFlag != null)
+            PenaltyFlag();
     }
 
 }

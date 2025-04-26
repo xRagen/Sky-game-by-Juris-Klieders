@@ -6,12 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SkiProto.unity
-    guid: d622868d34d91aa48a7a4085c6e7a2c1
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+    path: Assets/Level.unity
+    guid: 303f57ef45eb4084695caea5e2b227f5
   - enabled: 1
-    path: Assets/Scenes/Menu.unity
-    guid: 538a0788b893e584bb25d9aec0429ac1
+    path: Assets/Level2.unity
+    guid: a165a9ba1316d6840a39a4ecd85e0443
   m_configObjects: {}
